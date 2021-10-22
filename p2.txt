@@ -1,0 +1,7 @@
+var a : int;
+var b : int;
+repeat_check_condition a % b == 0
+	var r = a / b;
+	a = b;
+	b = r;
+write a;

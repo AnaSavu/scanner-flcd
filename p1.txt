@@ -1,0 +1,13 @@
+var a : int;
+var b : int;
+var c : int;
+var maximum : int;
+check_condition a > b
+	check_condition a > c
+		maximum = a;
+	not_true
+		check_condition b > c
+			maximum = b;
+		not_true
+			maximum = c;
+write max;

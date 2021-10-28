@@ -25,19 +25,23 @@ class Scanner:
                 x = ''
             else:
                 x += char
-        words.append(x)
+        new = re.sub(r'\n', '', x)
+        words.append(new)
         return words
 
     def readTokens(self, fileName):
         file = open(fileName, "r")
         operators, separators, reservedWords = [], [], []
-
         lineCounter = 0
         for line in file:
             if lineCounter == 0:
                 operators = self.readLine(line)
             elif lineCounter == 1:
                 separators = self.readLine(line)
+                index = separators.index("\\n")
+                separators[index] = "\n"
+                index = separators.index("\\t")
+                separators[index] = "\t"
                 separators.append(" ")
             else:
                 reservedWords = self.readLine(line)
@@ -48,28 +52,30 @@ class Scanner:
 
 
     def isPartOfOperator(self, char):
-
-        operators = ["+", "-", "*", "/", "%", "=<", "=>", ">", "<", "=", "==", "=!", "+=", "-="]
+        # operators = ["+", "-", "*", "/", "%", "=<", "=>", ">", "<", "=", "==", "=!", "+=", "-="]
+        operators = self.operators
         for op in operators:
             if char in op:
                 return True
         return False
 
     def isOperator(self, token):
-        operators = ["+", "-", "*", "/", "%", "=<", "=>", ">", "<", "=", "==", "!=", "+=", "-="]
+        # operators = ["+", "-", "*", "/", "%", "=<", "=>", ">", "<", "=", "==", "=!", "+=", "-="]
+        operators = self.operators
         if token in operators:
             return True
         return False
 
     def isSeparator(self, token):
-        separators = ["(", ")", "{", "}", ":", ";", ",", " ", "\n", "\t", "\""]
+        # separators = ["(", ")", "{", "}", ":", ";", ",", "\n", "\t", "\"", " "]
+        separators = self.separators
         if token in separators:
             return True
         else:
             return False
 
     def isReservedWord(self, token):
-        reservedWords = ["int", "check_condition", "not_true", "repeat_check_conditon", "repeat_check_condition_steps", "write", "var"]
+        reservedWords = self.reservedWords
         if token in reservedWords:
             return True
         return False
@@ -108,6 +114,9 @@ class Scanner:
     def scan(self):
         file = open(self.fileName, "r")
         lineNumber = 0
+        # print(self.operators)
+        # print(self.separators)
+        # print(self.reservedWords)
 
         for line in file:
             generatedTokens = self.tokenGenerator(line, lineNumber)
@@ -139,7 +148,6 @@ class Scanner:
         tokens = []
         token = ''
         index = 0
-
         while index < len(line):
 
             if self.isPartOfOperator(line[index]):

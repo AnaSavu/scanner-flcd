@@ -6,7 +6,7 @@ if __name__ == "__main__":
     st = ST()
     pif = PIF()
 
-    scanner = Scanner(st, pif, "token.in", "p3.txt")
+    scanner = Scanner(st, pif, "token.in", "p1.txt")
     scanner.scan()
 
     # print()

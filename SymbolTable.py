@@ -38,3 +38,6 @@ class ST:
         # else:
         #     return key
 
+    def getST(self):
+        return self.buckets
+

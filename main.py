@@ -6,12 +6,15 @@ if __name__ == "__main__":
     st = ST()
     pif = PIF()
 
-    fileName = input("Name of the file: ")
-    file = open(fileName, "r")
+    scanner = Scanner(st, pif, "token.in", "p3.txt")
+    scanner.scan()
 
-    for line in file:
-        tokens = getTokens(line)
-
-
-    print('Program Internal Form: ', pif)
-    print('Symbol Table: ', st)
+    # print()
+    # print('Program Internal Form: ')
+    # for line in scanner.getPIF():
+    #     print(line)
+    #
+    # print()
+    # print('Symbol Table: ')
+    # for line in scanner.getST():
+    #     print(line)

@@ -10,4 +10,4 @@ check_condition a > b
 			maximum = b;
 		not_true
 			maximum = c;
-write max;
+write maximum;

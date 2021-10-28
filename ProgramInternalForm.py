@@ -4,3 +4,6 @@ class PIF:
 
     def add(self, token, ST_pos):
         self.data.append([token, ST_pos])
+
+    def getData(self):
+        return self.data

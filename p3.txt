@@ -2,4 +2,4 @@ var a : int;
 var sum : 0;
 repeat_check_condition_steps var i : 0; i < a; i += 1
 	sum = sum + i
-write “sum:” + sum;
+write "sum:" + sum;

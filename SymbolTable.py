@@ -18,11 +18,13 @@ class ST:
         #if bucket is empty
         if len(self.buckets[index_key]) == 0:
             self.buckets[index_key].append(symbol)
-            return 0
+            #return 0
+            return (index_key, 0)
 
         #if bucket not empty
         self.buckets[index_key].append(symbol)
-        return len(self.buckets[index_key]) - 1
+        #return len(self.buckets[index_key]) - 1
+        return (index_key, len(self.buckets[index_key]) - 1)
 
         # #unsorted table
         #

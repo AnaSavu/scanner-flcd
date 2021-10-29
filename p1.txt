@@ -2,7 +2,7 @@ var a : int;
 var b : int;
 var c : int;
 var maximum : int;
-check_condition a > b
+check_condition a => b
 	check_condition a > c
 		maximum = a;
 	not_true

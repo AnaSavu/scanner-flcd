@@ -86,6 +86,9 @@ class Scanner:
     def isConstant(self, token):
         return re.match('^(?:0|[1-9][0-9]*)$', str(token)) is not None
 
+    def isStringConstant(self, token):
+        return re.match('^"[A-Za-z]([a-zA-Z]|[0-9]|[:-><@#$])*', token) is not None
+
     def getComment(self, line, index):
         token = ''
         quoteCounter = 1
@@ -100,14 +103,21 @@ class Scanner:
 
     def writeST(self):
         file = open("ST.out", "w")
-        file.write(str(self.getST()))
+        for i in range(len(self.st.getST())):
+            if len(self.st.getST()[i]) == 0:
+                file.write(str(self.st.getST()[i]) + "\n")
+            else:
+                list = []
+                list.append(str(self.st.getST()[i][0]))
+                file.write(str(list) + "\n")
+        #file.write(str(self.getST()))
         file.close()
 
     def writePIF(self):
         file = open("PIF.out", "w")
-        # for i in range(len(self.pif.getData())):
-        #     file.write(self.pif.getData()[i] + "\n")
-        file.write(str(self.getPIF()))
+        for i in range(len(self.pif.getData())):
+            file.write(str(self.pif.getData()[i]) + "\n")
+        #file.write(str(self.getPIF()))
         file.close()
 
 
@@ -123,14 +133,28 @@ class Scanner:
             for i in range(len(generatedTokens)):
                 if generatedTokens[i] == "":
                     continue
-                if self.isOperator(generatedTokens[i]) or self.isSeparator(generatedTokens[i]) or self.isReservedWord(generatedTokens[i]):
+                if self.isReservedWord(generatedTokens[i]):
                     self.pif.add(generatedTokens[i], -1)
+                elif self.isOperator(generatedTokens[i]):
+                    if generatedTokens[i] == "-" and self.isConstant(generatedTokens[i+1]):
+                        print("Lexical error on line number " + str(lineNumber) + "! Undefined negative number " + generatedTokens[i] + str(generatedTokens[i+1]) + "!")
+                        return
+                    else:
+                        self.pif.add(generatedTokens[i], -1)
+                elif self.isSeparator(generatedTokens[i]):
+                        if generatedTokens[i] == " " or generatedTokens[i] == "\n" or generatedTokens[i] == "\t":
+                            continue
+                        else:
+                            self.pif.add(generatedTokens[i], -1)
                 elif self.isIdentifier(generatedTokens[i]):
-                    st_pos = self.st.add(generatedTokens[i])
-                    self.pif.add("identifier", st_pos)
+                    key, st_pos = self.st.add(generatedTokens[i])
+                    self.pif.add("identifier", (key, st_pos))
                 elif self.isConstant(generatedTokens[i]):
-                    st_pos = self.st.add(generatedTokens[i])
-                    self.pif.add("constant", st_pos)
+                    key, st_pos = self.st.add(generatedTokens[i])
+                    self.pif.add("constant", (key, st_pos))
+                elif self.isStringConstant(generatedTokens[i]):
+                    key, st_pos = self.st.add(generatedTokens[i])
+                    self.pif.add("constant", (key, st_pos))
                 else:
                     print("Lexical error on line number " + str(lineNumber) + "! Undefined token " + generatedTokens[i] + "!")
                     return
@@ -173,10 +197,10 @@ class Scanner:
                     print("Lexical error on line number: " + str(lineNumber))
                     return
                 tokens.append(token)
-                tokens.append("\"")
+                tokens.append("\"" + t + "\"")
                 token = ''
-                tokens.append(t)
-                tokens.append("\"")
+                # tokens.append(t)
+                # tokens.append("\"")
                 index += 1
 
             elif self.isSeparator(line[index]):

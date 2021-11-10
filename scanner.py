@@ -136,6 +136,9 @@ class Scanner:
                 if self.isReservedWord(generatedTokens[i]):
                     self.pif.add(generatedTokens[i], -1)
                 elif self.isOperator(generatedTokens[i]):
+                    if (self.isIdentifier(generatedTokens[i-1]) or self.isConstant(generatedTokens[i-1])) and (self.isIdentifier(generatedTokens[i+1]) or self.isConstant(generatedTokens[i+1])):
+                        self.pif.add(generatedTokens[i], -1)
+                        break
                     if generatedTokens[i] == "-" and self.isConstant(generatedTokens[i+1]):
                         print("Lexical error on line number " + str(lineNumber) + "! Undefined negative number " + generatedTokens[i] + str(generatedTokens[i+1]) + "!")
                         return

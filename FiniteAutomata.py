@@ -12,6 +12,10 @@ class FA:
         self.F = None
         self.readFromFileAndVerify(fileName)
 
+    def eliminateDuplicates(self, x):
+        temp_set = set(x)
+        return list(temp_set)
+
     def determineTransitions(self, parts, Q, E):
         result = []
         transitions = []
@@ -47,7 +51,10 @@ class FA:
     def readFromFileAndVerify(self, fileName):
         with open(fileName) as file:
             Q = self.transformLine(file.readline())
+            Q = self.eliminateDuplicates(Q)
+
             E = self.transformLine(file.readline())
+            E = self.eliminateDuplicates(E)
 
             for element in Q:
                 if element in E:
@@ -58,8 +65,11 @@ class FA:
             except Exception as e:
                 print(e)
                 exit()
-            # S = parseTransitions(prseLine(''.join([line for line in file])))
+
+            S = self.eliminateDuplicates(S)
+
             q0 = self.transformLine(file.readline())
+            q0 = self.eliminateDuplicates(q0)
 
             if len(q0) != 1:
                 raise Exception("There are more the one initial state!")
@@ -67,6 +77,7 @@ class FA:
                 raise Exception("The initial state is not in the set of states!")
 
             F = self.transformLine(file.readline())
+            F = self.eliminateDuplicates(F)
 
             for state in F:
                 if state not in Q:

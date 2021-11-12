@@ -1,4 +1,4 @@
-var a : int;
+var a : cdsdf432;
 var b : int;
 var c : int;
 var maximum : int;

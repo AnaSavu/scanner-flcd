@@ -1,11 +1,13 @@
 import re
 
 class Scanner:
-    def __init__(self, st, pif, tokenFile, programFile):
+    def __init__(self, st, pif, tokenFile, programFile, faInt, faIdn):
         self.st = st
         self.pif = pif
         self.operators, self.separators, self.reservedWords = self.readTokens(tokenFile)
         self.fileName = programFile
+        self.faInt = faInt
+        self.faIdn = faIdn
 
     def getTokens(self):
         return self.operators, self.separators, self.reservedWords
@@ -81,10 +83,23 @@ class Scanner:
         return False
 
     def isIdentifier(self, token):
-        return re.match('^[A-Za-z]([a-zA-Z]|[0-9])*', token) is not None
+        try:
+            self.faIdn.isSequenceAcceptedByFA(token)
+        except Exception as e:
+            return False
+
+        return True
+        # return re.match('^[A-Za-z]([a-zA-Z]|[0-9])*', token) is not None
 
     def isConstant(self, token):
-        return re.match('^(?:0|[1-9][0-9]*)$', str(token)) is not None
+        if len(token) != 1 and token != "" and token[0] == '0':
+            return False
+        try:
+            self.faInt.isSequenceAcceptedByFA(token)
+        except Exception as e:
+            return False
+        return True
+        # return re.match('^(?:0|[1-9][0-9]*)$', str(token)) is not None
 
     def isStringConstant(self, token):
         return re.match('^"[A-Za-z]([a-zA-Z]|[0-9]|[:-><@#$])*', token) is not None
